@@ -1,47 +1,69 @@
 import 'package:flutter/material.dart';
-import 'package:manage_your_workout_schedule/model/training_schedule.dart';
-import 'package:manage_your_workout_schedule/screens/controllers/exercise_controller.dart';
+import 'package:manage_your_workout_schedule/model/notification_training.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
-import 'package:provider/provider.dart';
 
-import '../../model/exercise.dart';
 import '../../unit.dart';
 
 // ignore: must_be_immutable
-class SetTrainingScheduleWidget extends StatefulWidget {
-  SetTrainingScheduleWidget({
+class SetNotificationTrainingWidget extends StatefulWidget {
+  SetNotificationTrainingWidget({
     super.key,
     required this.onSubmit,
     this.value,
   });
-  Function(TrainingSchedule value) onSubmit;
-  TrainingSchedule? value;
+  Function(NotificationTraining value) onSubmit;
+  NotificationTraining? value;
 
   @override
-  State<SetTrainingScheduleWidget> createState() =>
-      _SetTrainingScheduleWidgetState();
+  State<SetNotificationTrainingWidget> createState() =>
+      _SetNotificationTrainingWidgetState();
 }
 
-class _SetTrainingScheduleWidgetState extends State<SetTrainingScheduleWidget> {
-  TrainingSchedule trainingSchedule = TrainingSchedule(exerciseList: []);
-  List<Exercise> exercises = [];
+class _SetNotificationTrainingWidgetState
+    extends State<SetNotificationTrainingWidget> {
+  NotificationTraining notificationTraining = NotificationTraining();
+  String? errorName;
 
   @override
   void initState() {
     super.initState();
     if (widget.value != null) {
-      trainingSchedule = widget.value!;
+      notificationTraining = widget.value!;
     }
-    exercises = context.read<ExerciseController>().exercises;
+    if (notificationTraining.name == null) {
+      errorName = "Vui lòng nhâp tên thông báo";
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
+        TextFormField(
+          keyboardType: TextInputType.text,
+          initialValue: notificationTraining.name,
+          onChanged: (value) {
+            notificationTraining.name = value;
+            setState(() {
+              if (value.isEmpty) {
+                errorName = "Vui lòng nhập tên thông báo.";
+              } else {
+                errorName = null;
+              }
+            });
+          },
+          decoration: InputDecoration(
+            hintText: "Nhập tên thông báo...",
+            labelText: "Tên thông báo",
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            errorText: errorName,
+          ),
+        ),
         Container(
           padding: const EdgeInsets.all(12),
-          margin: const EdgeInsets.all(8),
+          margin: const EdgeInsets.symmetric(vertical: 8),
           decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
               borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -61,9 +83,9 @@ class _SetTrainingScheduleWidgetState extends State<SetTrainingScheduleWidget> {
               children: [
                 Expanded(
                   child: Text(
-                    trainingSchedule.start == null
-                        ? "Chọn thời gian tập"
-                        : formatDateTime(trainingSchedule.start!),
+                    notificationTraining.start == null
+                        ? "Chọn thời gian thông báo"
+                        : formatDateTime(notificationTraining.start!),
                     style: const TextStyle(fontSize: 16),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -72,47 +94,6 @@ class _SetTrainingScheduleWidgetState extends State<SetTrainingScheduleWidget> {
                 const Icon(Icons.calendar_month)
               ],
             ),
-          ),
-        ),
-        SizedBox(
-          height: 300,
-          width: 500,
-          child: ListView.builder(
-            itemCount: exercises.length,
-            itemBuilder: (context, index) {
-              bool valueCheckBox =
-                  trainingSchedule.exerciseList.contains(exercises[index]);
-              return Container(
-                margin: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        offset: const Offset(0, 2),
-                        blurRadius: 4,
-                      )
-                    ]),
-                child: ListTile(
-                  leading: Checkbox(
-                    value: valueCheckBox,
-                    onChanged: (value) {
-                      setState(() {
-                        if (value == true) {
-                          trainingSchedule.exerciseList.add(exercises[index]);
-                        } else {
-                          trainingSchedule.exerciseList
-                              .remove(exercises[index]);
-                        }
-                      });
-                    },
-                  ),
-                  title: Text(exercises[index].name),
-                  subtitle: Text(exercises[index].count.toString()),
-                ),
-              );
-            },
           ),
         ),
         const SizedBox(
@@ -134,12 +115,29 @@ class _SetTrainingScheduleWidgetState extends State<SetTrainingScheduleWidget> {
               flex: 1,
               child: ElevatedButton(
                 onPressed: () {
-                  if (trainingSchedule.start == null) {
+                  if (notificationTraining.name == null ||
+                      notificationTraining.name!.isEmpty) {
                     showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
                         title: const Text("Lỗi"),
-                        content: const Text("Chưa chọn thời gian tập"),
+                        content: const Text("Chưa nhập tên thông báo"),
+                        actions: [
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text('Ok'),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else if (notificationTraining.start == null) {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text("Lỗi"),
+                        content: const Text("Chưa chọn thời gian thông báo"),
                         actions: [
                           ElevatedButton(
                             onPressed: () {
@@ -151,7 +149,7 @@ class _SetTrainingScheduleWidgetState extends State<SetTrainingScheduleWidget> {
                       ),
                     );
                   } else {
-                    widget.onSubmit(trainingSchedule);
+                    widget.onSubmit(notificationTraining);
                   }
                 },
                 child: const Text('Lưu'),
@@ -167,7 +165,7 @@ class _SetTrainingScheduleWidgetState extends State<SetTrainingScheduleWidget> {
     DateTime now = DateTime.now();
     DateTime? dateTime = await showOmniDateTimePicker(
       context: context,
-      initialDate: trainingSchedule.start,
+      initialDate: notificationTraining.start,
       firstDate: now,
       lastDate: now.add(const Duration(days: 100)),
       is24HourMode: false,
@@ -222,7 +220,7 @@ class _SetTrainingScheduleWidgetState extends State<SetTrainingScheduleWidget> {
       } else {
         // Process the selected dateTime
         setState(() {
-          trainingSchedule.start = dateTime;
+          notificationTraining.start = dateTime;
         });
       }
     }

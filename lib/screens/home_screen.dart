@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:manage_your_workout_schedule/screens/exercise_management_screen.dart';
+import 'package:manage_your_workout_schedule/screens/notidication_screen.dart';
 
 import 'training_schedule_management_screen.dart';
 
@@ -16,7 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      // appBar: AppBar(),
       body: PageView(
         onPageChanged: (value) {
           setState(() {
@@ -26,7 +27,8 @@ class _HomeScreenState extends State<HomeScreen> {
         controller: _pageController,
         children: const [
           ExerciseManagementScreen(),
-          TrainingScheduleManagementScreen()
+          NotidicationScreen(),
+          TrainingScheduleManagementScreen(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -34,6 +36,8 @@ class _HomeScreenState extends State<HomeScreen> {
         items: const [
           BottomNavigationBarItem(
               icon: Icon(Icons.fitness_center), label: 'Bài tập'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.notifications), label: 'Thông báo'),
           BottomNavigationBarItem(
               icon: Icon(Icons.calendar_today), label: 'Lịch tập'),
         ],

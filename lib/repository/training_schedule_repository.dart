@@ -90,6 +90,7 @@ class TrainingScheduleRepository {
         id: maps.first['id'],
         start: DateTime.fromMillisecondsSinceEpoch(maps.first['start']),
         exerciseList: exercises,
+        title: maps.first['title'],
       );
     }
     return null;

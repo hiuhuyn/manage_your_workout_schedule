@@ -19,7 +19,7 @@ class DatabaseHelper {
   }
 
   Future<Database> _initDatabase() async {
-    String path = join(await getDatabasesPath(), 'exercise_database.db');
+    String path = join(await getDatabasesPath(), 'exercise_database002.db');
     return openDatabase(
       path,
       onCreate: (db, version) async {
@@ -33,7 +33,8 @@ class DatabaseHelper {
         await db.execute('''
           CREATE TABLE training_schedules (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            start INTEGER
+            start INTEGER,
+            title TEXT
           )
         ''');
         await db.execute('''
@@ -42,6 +43,13 @@ class DatabaseHelper {
             exercise_id INTEGER,
             FOREIGN KEY (training_schedule_id) REFERENCES training_schedules (id),
             FOREIGN KEY (exercise_id) REFERENCES exercises (id)
+          )
+        ''');
+        await db.execute('''
+          CREATE TABLE notification_training (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            start INTEGER,
+            name TEXT
           )
         ''');
       },
@@ -53,4 +61,7 @@ class DatabaseHelper {
     final db = await database;
     db?.close();
   }
+
+  update(String s, Map<String, dynamic> map,
+      {required String where, required List<int?> whereArgs}) {}
 }

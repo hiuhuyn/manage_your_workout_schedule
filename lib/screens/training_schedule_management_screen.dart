@@ -24,35 +24,40 @@ class _TrainingScheduleManagementScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          Text(
-            'Quản lý lịch tập',
-            style: Theme.of(context).textTheme.headlineMedium,
-          ),
-          Expanded(
-            child: Consumer<TrainingScheduleManagementController>(
-              builder: (context, value, child) {
-                return ListView.builder(
-                  itemCount: value.trainingSchedules.length,
-                  itemBuilder: (context, index) {
-                    return ItemTrainingSchedule(
-                        value: value.trainingSchedules[index]);
-                  },
-                );
-              },
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Quản lý lịch tập',
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
             ),
-          ),
-        ],
+            Expanded(
+              child: Consumer<TrainingScheduleManagementController>(
+                builder: (context, value, child) {
+                  return ListView.builder(
+                    itemCount: value.trainingSchedules.length,
+                    itemBuilder: (context, index) {
+                      return ItemTrainingSchedule(
+                          value: value.trainingSchedules[index]);
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.deepOrange,
         onPressed: () {
           context
               .read<TrainingScheduleManagementController>()
               .addTrainingSchedule(context);
         },
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.edit_calendar),
       ),
     );
   }

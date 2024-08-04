@@ -48,8 +48,8 @@ class _LoginScreenState extends State<LoginScreen> {
               controller: usernameController,
               keyboardType: TextInputType.text,
               decoration: InputDecoration(
-                hintText: "Nhập tên bài tập...",
-                labelText: "Tên bài tập",
+                hintText: "Nhập tên tài khoản...",
+                labelText: "Tài khoản",
                 errorText: errorUsername,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -73,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
               keyboardType: TextInputType.text,
               decoration: InputDecoration(
                 hintText: "Nhập mật khẩu",
-                labelText: "Nhập mật khẩu của bạn",
+                labelText: "Mật khẩu",
                 errorText: errorPasswork,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),

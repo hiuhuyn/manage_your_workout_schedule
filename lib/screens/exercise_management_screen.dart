@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:manage_your_workout_schedule/screens/controllers/exercise_controller.dart';
+import 'package:manage_your_workout_schedule/screens/widgets/set_exercise.dart';
 import 'package:provider/provider.dart';
 
 import '../model/exercise.dart';
@@ -22,76 +23,10 @@ class _ExerciseManagementScreenState extends State<ExerciseManagementScreen> {
   }
 
   void _showExerciseDialog({Exercise? exercise}) {
-    final nameController = TextEditingController(text: exercise?.name ?? '');
-    final countController =
-        TextEditingController(text: exercise?.count.toString() ?? '');
-
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: Colors.white,
-        title: Text(exercise == null ? 'Thêm Bài Tập' : 'Sửa Bài Tập'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextFormField(
-              controller: nameController,
-              keyboardType: TextInputType.text,
-              decoration: InputDecoration(
-                hintText: "Nhập tên bài tập...",
-                labelText: "Tên bài tập",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            TextFormField(
-              controller: countController,
-              keyboardType: TextInputType.number,
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.digitsOnly,
-              ],
-              maxLength: 10,
-              decoration: InputDecoration(
-                hintText: "Nhập số lần...",
-                labelText: "Số lần",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-            )
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Text('Hủy'),
-          ),
-          TextButton(
-            onPressed: () async {
-              final name = nameController.text;
-              final count = int.tryParse(countController.text) ?? 0;
-
-              if (exercise == null) {
-                context
-                    .read<ExerciseController>()
-                    .addExercise(Exercise(name: name, count: count), context);
-              } else {
-                context.read<ExerciseController>().updateExercise(
-                      exercise.copyWith(name: name, count: count),
-                      context,
-                    );
-              }
-              Navigator.pop(context);
-            },
-            child: const Text('Lưu'),
-          ),
-        ],
+      builder: (context) => SetExerciseWidget(
+        exercise: exercise,
       ),
     );
   }
@@ -102,10 +37,14 @@ class _ExerciseManagementScreenState extends State<ExerciseManagementScreen> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Quản Lý Bài Tập',
-              style: Theme.of(context).textTheme.headlineMedium,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Quản Lý Bài Tập',
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
             ),
             Expanded(
               child: Consumer<ExerciseController>(

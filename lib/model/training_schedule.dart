@@ -1,36 +1,39 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
-
 import 'exercise.dart';
 
 class TrainingSchedule {
   int? id;
-  DateTime start;
+  String? title;
+  DateTime? start;
   List<Exercise> exerciseList;
   TrainingSchedule({
     this.id,
-    required this.start,
+    this.start,
     required this.exerciseList,
+    this.title,
   });
 
   TrainingSchedule copyWith({
     int? id,
     DateTime? start,
+    String? title,
     List<Exercise>? exerciseList,
   }) {
     return TrainingSchedule(
       id: id ?? this.id,
       start: start ?? this.start,
       exerciseList: exerciseList ?? this.exerciseList,
+      title: title ?? this.title,
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
-      'start': start.millisecondsSinceEpoch,
+      'start': start?.millisecondsSinceEpoch,
+      'title': title,
     };
   }
 
@@ -43,6 +46,7 @@ class TrainingSchedule {
           (x) => Exercise.fromMap(x as Map<String, dynamic>),
         ),
       ),
+      title: map['title'] ?? "",
     );
   }
 
@@ -50,20 +54,4 @@ class TrainingSchedule {
 
   factory TrainingSchedule.fromJson(String source) =>
       TrainingSchedule.fromMap(json.decode(source) as Map<String, dynamic>);
-
-  @override
-  String toString() =>
-      'TrainingSchedule(id: $id, start: $start, exerciseList: $exerciseList)';
-
-  @override
-  bool operator ==(covariant TrainingSchedule other) {
-    if (identical(this, other)) return true;
-
-    return other.id == id &&
-        other.start == start &&
-        listEquals(other.exerciseList, exerciseList);
-  }
-
-  @override
-  int get hashCode => id.hashCode ^ start.hashCode ^ exerciseList.hashCode;
 }
