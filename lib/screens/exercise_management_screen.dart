@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:manage_your_workout_schedule/screens/controllers/exercise_controller.dart';
 import 'package:manage_your_workout_schedule/screens/widgets/set_exercise.dart';
 import 'package:provider/provider.dart';

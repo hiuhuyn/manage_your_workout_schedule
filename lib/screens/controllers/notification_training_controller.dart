@@ -4,6 +4,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:manage_your_workout_schedule/repository/notification_repository.dart';
 import 'package:manage_your_workout_schedule/screens/widgets/set_notification_training.dart';
 
+import '../../database/notification_service.dart';
 import '../../model/notification_training.dart';
 
 class NotificationTrainingController extends ChangeNotifier {
@@ -13,6 +14,17 @@ class NotificationTrainingController extends ChangeNotifier {
   void loadTraining(BuildContext context) async {
     try {
       notifications = await repository.getAllNotifications();
+      DateTime now = DateTime.now();
+      for (var element in notifications) {
+        if (!element.start!.isBefore(now)) {
+          NotificationService.cancelNotification(element.id!);
+          NotificationService.scheduleNotification(
+              element.id!,
+              "Thông báo đến giờ tập",
+              element.name.toString(),
+              element.start!.copyWith(second: 0));
+        }
+      }
       notifyListeners();
     } catch (e) {
       showDialog(
@@ -52,6 +64,12 @@ class NotificationTrainingController extends ChangeNotifier {
           try {
             value.id = await repository.insertNotification(value);
             notifications.add(value);
+            NotificationService.cancelNotification(value.id!);
+            NotificationService.scheduleNotification(
+                value.id!,
+                "Thông báo đến giờ tập",
+                value.name.toString(),
+                value.start!.copyWith(second: 0));
             notifyListeners();
           } catch (e) {
             // ignore: use_build_context_synchronously
@@ -92,6 +110,12 @@ class NotificationTrainingController extends ChangeNotifier {
             } else {
               notifications.add(value);
             }
+            NotificationService.cancelNotification(notification.id!);
+            NotificationService.scheduleNotification(
+                notification.id!,
+                "Thông báo đến giờ tập",
+                notification.name.toString(),
+                notification.start!.copyWith(second: 0));
             notifyListeners();
           } catch (e) {
             // ignore: use_build_context_synchronously
@@ -113,6 +137,7 @@ class NotificationTrainingController extends ChangeNotifier {
       if (index != -1) {
         notifications.removeAt(index);
       }
+      NotificationService.cancelNotification(id);
       notifyListeners();
     } catch (e) {
       // ignore: use_build_context_synchronously
@@ -120,48 +145,5 @@ class NotificationTrainingController extends ChangeNotifier {
         Text('Error delete notification training: $e'),
       ]);
     }
-  }
-
-  void scheduleAlarm(DateTime dateTime) async {
-    int alarmId = 0;
-    // await AndroidAlarmManager.oneShotAt(
-    //   dateTime,
-    //   alarmId,
-    //   callback,
-    //   exact: true,
-    //   wakeup: true,
-    // );
-  }
-
-  static Future<void> callback() async {
-    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-        FlutterLocalNotificationsPlugin();
-
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails(
-      'your channel id',
-      'your channel name',
-      importance: Importance.max,
-      priority: Priority.high,
-      showWhen: false,
-    );
-    const NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
-
-    await flutterLocalNotificationsPlugin.show(
-      0,
-      'Scheduled Notification',
-      'This is a scheduled notification.',
-      platformChannelSpecifics,
-      payload: 'item x',
-    );
-
-    // Gọi hàm mong muốn ở đây
-    yourCustomFunction();
-  }
-
-  static void yourCustomFunction() {
-    // Code của hàm bạn muốn gọi
-    print('Custom function is called!');
   }
 }

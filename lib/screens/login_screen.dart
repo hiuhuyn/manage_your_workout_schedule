@@ -12,6 +12,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passworkController = TextEditingController();
+  final focusUn = FocusNode();
+  final focusPass = FocusNode();
 
   String? errorPasswork;
   String? errorUsername;
@@ -45,6 +47,8 @@ class _LoginScreenState extends State<LoginScreen> {
               flex: 1,
             ),
             TextFormField(
+              key: const ValueKey('username'),
+              focusNode: focusUn,
               controller: usernameController,
               keyboardType: TextInputType.text,
               decoration: InputDecoration(
@@ -69,6 +73,8 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 20,
             ),
             TextFormField(
+              key: const ValueKey('password'),
+              focusNode: focusPass,
               controller: passworkController,
               keyboardType: TextInputType.text,
               decoration: InputDecoration(
