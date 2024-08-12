@@ -1,4 +1,4 @@
-import '../database/database_helper.dart';
+import '../services/database_helper.dart';
 import '../model/exercise.dart';
 import '../model/training_schedule.dart';
 import 'exercise_repository.dart';

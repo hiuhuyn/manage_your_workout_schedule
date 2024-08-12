@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import '../../model/exercise.dart';
@@ -11,6 +13,7 @@ class ExerciseController extends ChangeNotifier {
   void loadExercises(BuildContext context) async {
     try {
       _exercises = await _exerciseRepository.getAllExercises();
+      log(_exercises.toList().toString());
       notifyListeners();
     } catch (e) {
       showAboutDialog(context: context, children: [
@@ -33,6 +36,7 @@ class ExerciseController extends ChangeNotifier {
 
   void updateExercise(Exercise exercise, BuildContext context) async {
     try {
+      log(exercise.toString());
       await _exerciseRepository.updateExercise(exercise);
       int index = _exercises.indexWhere(
         (element) => element.id == exercise.id,

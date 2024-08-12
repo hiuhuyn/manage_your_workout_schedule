@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:sqflite/sqflite.dart';
 // ignore: depend_on_referenced_packages
-import '../database/database_helper.dart';
+import '../services/database_helper.dart';
 import '../model/notification_training.dart';
 
 class NotificationTrainingRepository {

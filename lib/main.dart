@@ -6,7 +6,7 @@ import 'package:manage_your_workout_schedule/screens/home_screen.dart';
 import 'package:manage_your_workout_schedule/screens/login_screen.dart';
 import 'package:provider/provider.dart';
 
-import 'database/notification_service.dart';
+import 'services/notification_service.dart';
 import 'screens/controllers/exercise_controller.dart';
 import 'screens/controllers/notification_training_controller.dart';
 import 'screens/controllers/training_schedule_management_controller.dart';
@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
           ),
           useMaterial3: true,
         ),
-        home: const LoginScreen(),
+        home: const HomeScreen(),
       ),
     );
   }

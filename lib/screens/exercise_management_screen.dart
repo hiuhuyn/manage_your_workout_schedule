@@ -47,11 +47,11 @@ class _ExerciseManagementScreenState extends State<ExerciseManagementScreen> {
             ),
             Expanded(
               child: Consumer<ExerciseController>(
-                  builder: (context, value, child) {
+                  builder: (context, model, child) {
                 return ListView.builder(
-                  itemCount: value.exercises.length,
+                  itemCount: model.exercises.length,
                   itemBuilder: (context, index) {
-                    final exercise = value.exercises[index];
+                    final exercise = model.exercises[index];
                     return Container(
                       margin: const EdgeInsets.all(8),
                       padding: const EdgeInsets.all(8),
@@ -66,7 +66,15 @@ class _ExerciseManagementScreenState extends State<ExerciseManagementScreen> {
                             )
                           ]),
                       child: ListTile(
-                        leading: const Icon(Icons.fitness_center),
+                        leading: Checkbox(
+                          onChanged: (value) {
+                            if (value != null) {
+                              exercise.isCompleted = value;
+                              model.updateExercise(exercise, context);
+                            }
+                          },
+                          value: exercise.isCompleted,
+                        ),
                         title: Text(exercise.name),
                         subtitle: Text('Số Lần: ${exercise.count}'),
                         trailing: Row(
@@ -80,7 +88,7 @@ class _ExerciseManagementScreenState extends State<ExerciseManagementScreen> {
                             IconButton(
                               icon: const Icon(Icons.delete),
                               onPressed: () =>
-                                  value.deleteExercise(exercise, context),
+                                  model.deleteExercise(exercise, context),
                             ),
                           ],
                         ),

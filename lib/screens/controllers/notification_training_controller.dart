@@ -4,7 +4,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:manage_your_workout_schedule/repository/notification_repository.dart';
 import 'package:manage_your_workout_schedule/screens/widgets/set_notification_training.dart';
 
-import '../../database/notification_service.dart';
+import '../../services/notification_service.dart';
 import '../../model/notification_training.dart';
 
 class NotificationTrainingController extends ChangeNotifier {

@@ -19,7 +19,7 @@ class DatabaseHelper {
   }
 
   Future<Database> _initDatabase() async {
-    String path = join(await getDatabasesPath(), 'exercise_database002.db');
+    String path = join(await getDatabasesPath(), 'exercise_database003.db');
     return openDatabase(
       path,
       onCreate: (db, version) async {
@@ -27,7 +27,8 @@ class DatabaseHelper {
           CREATE TABLE exercises (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT,
-            count INTEGER
+            count INTEGER,
+            isCompleted INTEGER
           )
         ''');
         await db.execute('''
